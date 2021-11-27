@@ -1,0 +1,39 @@
+name: 'Github Branch Gitee'
+description: '同步 GitHub 指定分支到 Gitee'
+inputs:
+  github_repo:
+    description: 'Github 仓库，例如 username/repo'
+    required: true
+  github_branch:
+    description: 'Github 分支，例如 main'
+    required: true
+  gitee_repo:
+    description: 'Gitee 仓库，例如 username/repo'
+    required: true
+  gitee_branch:
+    description: 'Gitee 分支，例如 master'
+    required: true
+  username:
+    description: 'Gitee 用户名，用于登录。'
+    required: true
+  password:
+    description: 'Gitee 密码，用于登录。'
+    required: true
+  token:
+    description: 'GitHub 令牌，用于私有仓库的拉取。'
+    default: ${{ github.token }}
+runs:
+  using: composite
+  steps:
+    - run: |
+        git init
+        git remote add github https://${{ inputs.token }}@github.com/${{ inputs.github_repo }}.git
+        git fetch --all
+        git branch --track ${{ inputs.github_branch }} remotes/github/${{ inputs.github_branch }}
+      shell: bash
+    - run: |
+        git remote add gitee https://${{ inputs.username }}:${{ inputs.password }}@gitee.com/${{ inputs.gitee_repo }}.git
+        git show-ref
+        git branch --verbose
+        git push gitee ${{ inputs.github_branch }}:${{ inputs.gitee_branch }}
+      shell: bash
