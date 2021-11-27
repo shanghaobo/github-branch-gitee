@@ -14,7 +14,7 @@ jobs:
       uses: actions/checkout@master
 
     - name: Async Github Branch To Gitee
-      uses: shanghaobo/async-github-branch-to-gitee@master
+      uses: shanghaobo/github-branch-gitee@master
       with:
         github_repo: shanghaobo/test-async
         github_branch: test
